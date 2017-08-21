@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Leverade tryout">
+	<meta name="author" content="Alberto Sanchez Gonzalez">
+
+	<title>Country finder</title>
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              rel="stylesheet">
+	<link href="style.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container" id="app">
+		<h1 class="text-center">Country Finder</h1>
+
+		<div class="" v-if="!countryDetailed">
+			<div v-if="selectionsDone()">
+				<h5 class="text-center">Country Selection</h5>
+				<transition-group
+				    name="staggered-fade"
+				    tag="ul"
+				    v-bind:css="false"
+				    v-on:before-enter="beforeEnter"
+				    v-on:enter="enter"
+				    v-on:leave="leave"
+				  >
+				  <li
+					 is="countries-table"
+					 v-for="(c,index) in countriesSelectedLimited"
+					 :key="c.name.official"
+					 :country="c"
+					 @countrydetailed="setCountryDetailed"
+				  ></li>
+				 </transition-group>
+				<span>Displayed {{ countriesSelectedLimited.length }} countries of {{ countriesSelected.length }} found</span>
+			</div>
+			<div>
+				<section class="callout secondary">
+					<h5 class="text-center">Filter by attributes</h5>
+					<form>
+						<div class="row">
+							<div class="large-6 columns">
+								<listattributes :elements="regions" name="region" @selection="setRegion"></listattributes>
+							</div>
+							<div class="medium-6 columns">
+								<listattributes :elements="languages" name="language" @selection="setLanguage"></listattributes>
+							</div>
+						</div>
+					</form>
+				</section>
+				<div v-show="selectionsDone()">
+					<h5 class="text-center">Selected {{ regionSelected }} and {{ langSelected }}</h5>
+				</div>
+			</div>
+		</div>
+		<div class="" v-else>
+			<country-info :country="countryDetailed"></country-info>
+			<form @click="resetSelections()" class="">
+				<button class="">Return</button>
+			</form>
+		</div>
+
+
+	</div>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/vue"></script>
+	<script src="app.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+
+</body>
+</html>
